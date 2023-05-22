@@ -16,10 +16,10 @@ public class RunCompressDecompressMaze {
         Maze maze = mazeGenerator.generate(100, 100); //Generate new maze
         try {
 // save maze to a file
-            OutputStream out = new MyCompressorOutputStream(new
-                    FileOutputStream(mazeFileName));
+            OutputStream out = new MyCompressorOutputStream(new FileOutputStream(mazeFileName));
             out.write(maze.toByteArray());
             out.flush();
+//            System.out.println("Hello");
             out.close();
         } catch (IOException e) {
             e.printStackTrace();

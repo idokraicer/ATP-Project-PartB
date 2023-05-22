@@ -20,22 +20,19 @@ public class MyDecompressorInputStream extends InputStream {
 
     @Override
     public int read(byte[] b) throws IOException {
-        byte[] inputBytes = in.readAllBytes();
+        //byte[] inputBytes;// = in.readAllBytes();
         int index = 12;
         for (int i = 0; i < 12; i++) {
-            b[i] = inputBytes[i];
+            b[i] = (byte) read();
         }
-        for (int i = 12; i < inputBytes.length; i++) {
-            int num = inputBytes[index];
-            for (int j = 0; j < 8; j++) {
-                if (num % 2 == 1) {
-                    b[i + j] = (byte) 1;
-                } else {
-                    b[i + j] = (byte) 0;
-                }
-                num /= 2;
+        int i = 12;
+        while (i < b.length) {
+            int num = read();
+            num = num < 0 ? num + 256 : num;
+            for (int j = 0; j < 8 && i < b.length; j++) {
+                b[i++] = (byte) (num % 2);
+                num = num / 2;
             }
-            index++;
         }
         return 0;
     }
