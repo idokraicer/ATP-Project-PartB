@@ -2,11 +2,13 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
+import java.io.Serializable;
+
 /**
  * This class is the maze state class.
  * It contains the position of the state, the predecessor of the state, the cost of the state and the max depth of the state.
  */
-public class MazeState extends AState {
+public class MazeState extends AState implements Serializable {
     @Override
     protected boolean isSameState(AState other) {
         return this.cords.compare(other.cords);

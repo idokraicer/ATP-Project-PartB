@@ -1,69 +1,68 @@
 package Server;
 
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Server {
-    private final IServerStrategy strategy;
+
     private final int port;
     private final int listeningIntervalMS;
-    private volatile boolean stop; // volatile - for thread safety
-    private final ExecutorService threadPool; // Thread pool
+    private final IServerStrategy strategy;
+    private volatile boolean stop;
+    private final ThreadPoolExecutor threadPoolExecutor;
 
-    public Server(int port, int listeningIntervalMS, IServerStrategy strategy) throws FileNotFoundException{
-        Configurations conf = Configurations.getInstance();
-        this.strategy = strategy;
+    public Server(int port, int listeningIntervalMS, IServerStrategy strategy) {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
-        this.threadPool = Executors.newFixedThreadPool(conf.getThreadPoolSize() /* reading from config */);
-
+        this.strategy = strategy;
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        threadPoolExecutor.setCorePoolSize(Configurations.getInstance().getThreadPoolSize());
     }
 
     public void start() {
-        new Thread(() -> {
-            runServer();
-        }).start();
-
+        new Thread(this::startServer).start();
     }
 
-    public void runServer() {
+    public void startServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(listeningIntervalMS);
+            serverSocket.setSoTimeout(this.listeningIntervalMS);
+            System.out.println("Starting server at port " + port + "\n");
             while (!stop) {
                 try {
-                    Socket clientSocket = serverSocket.accept();
-                    threadPool.submit(() -> handleClient(clientSocket));
+                    Socket clientSocket = serverSocket.accept(); // Waiting for a client
+                    System.out.println("Client accepted " + clientSocket.toString() + "\n");
+                    threadPoolExecutor.execute(() -> handleClient(clientSocket));
                 } catch (SocketTimeoutException e) {
-                    // do nothing - catch with LOG later
+                    System.out.println("Socket timeout");
                 }
-
             }
-            threadPool.shutdown();
+            threadPoolExecutor.shutdown();
+            serverSocket.close();
         } catch (IOException e) {
+            System.out.println("IOException");
             e.printStackTrace();
         }
-
     }
 
     private void handleClient(Socket clientSocket) {
         try {
             strategy.ServerStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            System.out.println("Done handling client: " + clientSocket + "\n");
             clientSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void stop() {
-        stop = true;
+        System.out.println("Server stopped");
+        this.stop = true;
     }
-
 }

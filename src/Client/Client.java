@@ -1,19 +1,25 @@
 package Client;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 
-public class Client implements IClientStrategy{
-    public Client(InetAddress localHost, int i, IClientStrategy iClientStrategy) {
-        
-    }
+public class Client {
+    private final InetAddress serverIP;
+    private final int serverPort;
+    private final IClientStrategy strategy;
 
-    @Override
-    public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
-        
+    public Client(InetAddress serverIP, int serverPort, IClientStrategy strategy) {
+        this.serverIP = serverIP;
+        this.serverPort = serverPort;
+        this.strategy = strategy;
     }
 
     public void communicateWithServer() {
+        try (Socket clientSocket = new Socket(serverIP, serverPort)) {
+            strategy.clientStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

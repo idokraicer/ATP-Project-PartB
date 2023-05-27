@@ -1,5 +1,6 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -7,7 +8,7 @@ import java.util.Random;
  * This class is the maze class.
  * It contains the maze, the start position and the goal position.
  */
-public class Maze {
+public class Maze implements Serializable {
     private int[][] maze;
     private Position startPosition;
     private Position goalPosition;
