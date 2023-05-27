@@ -34,6 +34,7 @@ public class RunCommunicateWithServers {
         solveSearchProblemServer.stop();
     }
 
+    /*  */
     private static void CommunicateWithServer_MazeGenerating() {
         try {
             Client client = new Client(InetAddress.getLocalHost(), 5400, new

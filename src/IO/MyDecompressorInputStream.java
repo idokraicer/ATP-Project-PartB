@@ -18,9 +18,15 @@ public class MyDecompressorInputStream extends InputStream {
     }
 
 
+    /**
+     * decompresses the byte arrays to a bigger byte array
+     *
+     * @param b - byte array to read
+     * @return 0 if successful
+     * @throws IOException - if there is a problem with the input stream
+     */
     @Override
     public int read(byte[] b) throws IOException {
-        //byte[] inputBytes;// = in.readAllBytes();
         int index = 12;
         for (int i = 0; i < 12; i++) {
             b[i] = (byte) read();

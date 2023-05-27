@@ -170,6 +170,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * This class is a singleton class that reads the configurations from the config.properties file
+ * and returns the values of the configurations.
+ */
 public class Configurations {
     private static Configurations configInstance = null;
     private Properties properties;

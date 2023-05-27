@@ -16,6 +16,13 @@ public class SimpleDecompressorInputStream extends InputStream {
         return in.read();
     }
 
+    /**
+     * decompresses the data from consecutive 0's and 1's to a byte array
+     *
+     * @param b - byte array to read
+     * @return 0 if successful
+     * @throws IOException - if there is a problem with the input stream
+     */
     @Override
     public int read(byte[] b) throws IOException {
         byte[] inputBytes = in.readAllBytes();

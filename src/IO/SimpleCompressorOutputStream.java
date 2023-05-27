@@ -16,6 +16,11 @@ public class SimpleCompressorOutputStream extends OutputStream {
         out.write((byte) b);
     }
 
+    /**
+     * compresses the byte arrays to sequences of consecutive 1's and 0's
+     * @param b - byte array to write
+     * @throws IOException - if there is a problem with the output stream
+     */
     @Override
     public void write(byte[] b) throws IOException {
 

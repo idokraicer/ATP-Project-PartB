@@ -7,6 +7,12 @@ import algorithms.mazeGenerators.Maze;
 import java.io.*;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
+    /**
+     * @param inFromClient  - input stream from client
+     * @param outToClient   - output stream to client
+     * @throws IOException  - if there is a problem with the input or output streams
+     * @throws ClassNotFoundException - if the class of a serialized object cannot be found
+     */
     @Override
     public void ServerStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {

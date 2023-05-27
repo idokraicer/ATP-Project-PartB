@@ -15,6 +15,12 @@ public class Server {
     private volatile boolean stop;
     private final ThreadPoolExecutor threadPoolExecutor;
 
+    /**
+     * constructor
+     * @param port port
+     * @param listeningIntervalMS listeningIntervalMS
+     * @param strategy strategy
+     */
     public Server(int port, int listeningIntervalMS, IServerStrategy strategy) {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
@@ -27,6 +33,9 @@ public class Server {
         new Thread(this::startServer).start();
     }
 
+    /**
+     * startServer
+     */
     public void startServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
